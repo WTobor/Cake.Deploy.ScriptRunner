@@ -1,17 +1,23 @@
 Task("Az-Show-Version")
     .Does(() => {
-        az.Run(new CommandBuilder(string.Empty).With("version", string.Empty));
+        az.Run(a => {
+                a.Append("version");
+            });
     });
 
 Task("Login")
     .Does(() => {
-        az.Run(new CommandBuilder("login"), exceptionOnError: false);
+        //exceptionOnError: false because of default warning "WARNING: You have logged in. Now let us find all the subscriptions to which you have access..."
+        az.Run(a => {
+                a.Append("login");
+            }, exceptionOnError: false);
     });
 
 Task("Set-Subscription")
     .Does(() => {
-        var builder = new CommandBuilder("account set")
-                        .With("subscription", ReleaseVariable("subscription"));
-
-        az.Run(builder);
+        az.Run(a => {
+                a.Append("account");
+                a.Append("set");
+                a.AppendSwitchQuoted("--subscription", ReleaseVariable("subscription"));
+            });
     });

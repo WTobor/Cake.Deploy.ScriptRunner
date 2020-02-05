@@ -1,5 +1,3 @@
-#load "..\command-builder.cake"
-
 public class PowershellCommandRunner
 {
     protected ICakeContext context;
@@ -13,13 +11,13 @@ public class PowershellCommandRunner
     
     public T Run<T>(
         string command,
-        CommandBuilder commandBuilder,
+        Action<ProcessArgumentBuilder> argumentBuilder,
         Nullable<bool> exceptionOnError = null,
         bool logOutput = true)
     {
 	    var output = RunCommand(
             command,
-            commandBuilder,
+            argumentBuilder,
             exceptionOnError, 
             logOutput);
 
@@ -28,20 +26,20 @@ public class PowershellCommandRunner
 
     public void Run(
         string command,
-        CommandBuilder commandBuilder = null,
+        Action<ProcessArgumentBuilder> argumentBuilder,
         Nullable<bool> exceptionOnError = null,
         bool logOutput = true)
     {
         RunCommand(
             command,
-            commandBuilder,
+            argumentBuilder,
             exceptionOnError,
             logOutput);
     }
 
     public string RunCommand(
         string command,
-        CommandBuilder builder = null,
+        Action<ProcessArgumentBuilder> argumentBuilder,
         Nullable<bool> commandExceptionOnError = null,
         bool logOutput = true)
     {
@@ -56,16 +54,7 @@ public class PowershellCommandRunner
                 ExceptionOnScriptError = exceptionOnError,
                 OutputToAppConsole = logOutput,
                 LogOutput = logOutput
-            };
-
-        if (builder != null) 
-        {
-            psSettings = psSettings
-                .WithArguments(args => {
-                    args.Append("--%");
-                    args.Append(builder.Build());
-                });
-        }
+            }.WithArguments(argumentBuilder);
 
         var outputLines = this.context.StartPowershellScript(command, psSettings)
             .Where(p => p.BaseObject is String)

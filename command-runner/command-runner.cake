@@ -1,7 +1,7 @@
 using Cake.Powershell;
 using Cake.Json;
-
-#load "..\command-builder.cake"
+using Cake.Core.IO;
+using System;
 
 public class CommandRunner : PowershellCommandRunner 
 {
@@ -13,25 +13,21 @@ public class CommandRunner : PowershellCommandRunner
         this.toolName = toolName;
     }
 
-    public T Run<T>(
-        CommandBuilder commandBuilder,
+    public T Run<T>(Action<ProcessArgumentBuilder> builder,
         Nullable<bool> exceptionOnError = null,
         bool logOutput = true) => 
             this.Run<T>(
                 this.toolName,
-                commandBuilder,
+                builder,
                 exceptionOnError, 
                 logOutput);
 
-    public void Run(
-        CommandBuilder commandBuilder,
+    public void Run(Action<ProcessArgumentBuilder> builder,
         Nullable<bool> exceptionOnError = null,
-        bool logOutput = true)
-    {
-        this.Run(
-            this.toolName,
-            commandBuilder,
-            exceptionOnError, 
-            logOutput);
-    }
+        bool logOutput = true) => 
+            this.Run(
+                this.toolName,
+                builder,
+                exceptionOnError, 
+                logOutput);
 }

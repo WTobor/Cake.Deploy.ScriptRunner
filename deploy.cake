@@ -3,7 +3,6 @@
 #addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Deploy.Variables&version=0.3.0"
 #addin "nuget:https://api.nuget.org/v3/index.json?package=Cake.Npm&version=0.17.0"
 
-#load "command-builder.cake"
 #load "command-runner/command-runner.cake"
 #load "command-runner/powershell-command-runner.cake"
 #load "commands/commands-az.cake"
