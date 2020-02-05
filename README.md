@@ -59,7 +59,7 @@ Class for basic command runner - is uses script command (`toolName`, ex. `az`) t
 
 Class for command runners installed in a specified location ("./node_modules/.bin/*.cmd").
 
-## `npm.cake`
+### `npm.cake`
 
 File with task to install npm packages.
 
