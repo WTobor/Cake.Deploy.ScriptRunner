@@ -37,6 +37,63 @@ Parameters:
 - `--env`: environment (ex. `default`, `dev`)
 - `--subscription`: name or ID of subscription
 
+## Script runner examples
+
+### script with no parameters
+
+```powershell
+az.Run(a => {
+                a.Append("login");
+            });
+```
+
+Script command: `az login`
+
+### script with no parameters, with turned off throwing exception on error/warning
+
+```powershell
+az.Run(a => {
+                a.Append("login");
+            }, exceptionOnError: false);
+```
+
+Script command: `az login`
+
+### script with one parameter
+
+```powershell
+az.Run(a => {
+                a.Append("account");
+                a.Append("set");
+                a.AppendSwitchQuoted("--subscription", ReleaseVariable("subscription"));
+            });
+```
+
+Script command: `az account set --subscription "xxxxx"`
+
+### script with one secret parameters (the secret value will be not visible in console)
+
+```powershell
+az.Run(a => {
+                a.Append("testSecretCommand");
+                a.AppendSwitchQuotedSecret("--secretVariable", ReleaseVariable("secretVariable"));
+            });
+```
+
+Script command: `az testSecretCommand --secretVariable "*****"`
+
+### script with one parameter with special characters with special [parsing token](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_special_characters?view=powershell-7#stop-parsing-token---)
+
+```powershell
+az.Run(a => {
+                a.Append("testCommand");
+                a.AppendSwitch("--%");
+                a.AppendSwitchQuotedSecret("--variableWithSpecialCharacters", ReleaseVariable("variableWithSpecialCharacters"));
+            });
+```
+
+Script command: `az testCommand --% --variableWithSpecialCharacters "#@$%^|&"`
+
 ## Structure
 
 ### `deploy.ps1`
