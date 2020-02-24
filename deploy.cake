@@ -16,7 +16,7 @@ PowershellCommandRunner ps;
 Setup(context =>
 {
     az = new CommandRunner(context, "az");
-    ps = new PowershellCommandRunner(context);;
+    ps = new PowershellCommandRunner(context);
 });
 
 Task("Default-Az-Show-Version")
